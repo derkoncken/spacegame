@@ -8,5 +8,6 @@ class Planet:
         self.color = color
         self.ship = ship
 
-    def draw(self, surface):
-        pygame.draw.circle(surface, self.color, (int(self.x - self.ship.x), int(self.y - self.ship.y)), self.radius)
+    def draw(self, screen):
+        width, height = screen.get_size()
+        pygame.draw.circle(screen, self.color, (int(self.x - self.ship.x + width // 2), int(self.y - self.ship.y + height // 2)), self.radius)

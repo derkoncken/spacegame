@@ -4,7 +4,7 @@ import math
 
 from factory import create_objects
 
-from space_gameloop import space_gameloop
+from space.space_gameloop import space_gameloop
 
 
 
