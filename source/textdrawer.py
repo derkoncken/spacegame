@@ -1,4 +1,4 @@
-def draw_textbox(surface, text_lines, pos, font, color=(255,255,255), bg_color=None, line_height=22):
+def draw_textbox(surface, text_lines, pos, font, color=(255,255,255), bg_color=None, line_height=20):
     """Zeichnet mehrere Zeilen Text als Textfeld auf eine Surface."""
     x, y = pos
     for line in text_lines:

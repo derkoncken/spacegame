@@ -2,9 +2,12 @@ import pygame
 import sys 
 import math
 
-from space.factory import create_objects
+from factory import create_objects
 
 from space.space_gameloop import space_gameloop
+from game_over.game_over_gameloop import game_over_gameloop
+from planet_1.planet_1_gameloop import planet_1_gameloop
+
 
 
 
@@ -30,13 +33,14 @@ while running:
 
     keys = pygame.key.get_pressed()
 
-    if stage == "space":
-        stage =space_gameloop(space_objects, keys, screen, font, stage)
-    
-    if stage == "planet_1":
-        pass
+    match(stage):
+        case "space":
+            stage = space_gameloop(space_objects, keys, screen, font, stage)
+        case "game_over":
+            stage = game_over_gameloop(space_objects, keys, screen, font)
+        case "planet_1":
+            stage = planet_1_gameloop(space_objects, keys, screen, font)
 
-    print(stage)
 
     pygame.display.flip()
     clock.tick(60)

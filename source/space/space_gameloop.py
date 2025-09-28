@@ -23,12 +23,25 @@ def space_gameloop(space_objects, keys, screen, font, stage):
     ship.react_to_keypress(keys)
     ship.apply_physics(WORLD_WIDTH, WORLD_HEIGHT)
 
+    if ship.status <= 0:
+        stage = "game_over"
+        print("Game Over")
+        return stage
+
+    ship_velocity = math.sqrt(ship.x_velocity**2 + ship.y_velocity**2)*50
+
     for planet in planets:
         dx = ship.x - planet.x
         dy = ship.y - planet.y
         distance = math.hypot(dx, dy)
-        if distance < (planet.radius - 200):
+        if distance < (planet.radius):
+            diff = ship_velocity - ship.max_atmospheric_velocity
+            if diff > 0 and ship.status > 0:
+                ship.status -= 0.00001 * diff**2
+        if distance < (planet.radius - 1000):
+            print("Landed on planet")
             stage = "planet_1"
+
 
     # Drawing Screen
     screen.fill((0, 0, 0))
@@ -49,9 +62,15 @@ def space_gameloop(space_objects, keys, screen, font, stage):
     computer = pygame.transform.scale(computer_original, (computer_width, computer_height))
     text_lines = [
         "Velocity",
-        "   " + str(round(200 * math.sqrt(ship.x_velocity**2 + ship.y_velocity**2), 1)) + " km/h",
-        "Max. Entry Velocity",
-        "   " + "1000 km/h"
+        "       " + str(round(ship_velocity, 1)) + " km/h",
+        "Max. Atmospheric Vel.",
+        "       " + str(round(ship.max_atmospheric_velocity, 1)) + " km/h",
+        "Status",
+        "       " + str(round(ship.status, 1)) + " %",
+        "Fuel",
+        "       " + str(round(ship.fuel, 1)) + " / " + str(round(ship.max_fuel, 1)) + " L (" + str(round(100 * ship.fuel / ship.max_fuel, 1)) + " %)",
+        "Mass",
+        "       " + str(round(ship.mass, 1)) + " kg"
     ]
     draw_textbox(computer, text_lines, (270, 290), font)
     screen.blit(computer, (width - computer_width + 200, -200))
