@@ -1,15 +1,16 @@
+import os
+import sys
 import pygame
-import sys 
 import math
+
+# Arbeitsverzeichnis auf das Verzeichnis dieser Datei setzen
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 from factory import create_objects
 
-from space.space_gameloop import space_gameloop
-from game_over.game_over_gameloop import game_over_gameloop
-from planet_1.planet_1_gameloop import planet_1_gameloop
-
-
-
+from gameloops.space import SpaceGameloop
+from gameloops.planet_1 import Planet1Gameloop
+from gameloops.game_over import GameOverGameloop
 
 pygame.init()
 screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
@@ -17,9 +18,13 @@ pygame.display.set_caption("PNG zeichnen")
 font = pygame.font.Font("assets/8_bit_font.ttf", 18)
 clock = pygame.time.Clock()
 
+objects = create_objects(screen)
 
-space_objects = create_objects(screen)
-stage = "space"
+space_gameloop = SpaceGameloop(objects, font, screen)
+planet1_gameloop = Planet1Gameloop(objects, font, screen)
+gameover_gameloop = GameOverGameloop(objects, font, screen)
+
+stage = "planet_1"
 running = True
 
 while running:
@@ -33,14 +38,13 @@ while running:
 
     keys = pygame.key.get_pressed()
 
-    match(stage):
+    match stage:
         case "space":
-            stage = space_gameloop(space_objects, keys, screen, font, stage)
+            stage = space_gameloop.gameloop(keys, stage)
         case "game_over":
-            stage = game_over_gameloop(space_objects, keys, screen, font)
+            stage = gameover_gameloop.gameloop(keys, stage)
         case "planet_1":
-            stage = planet_1_gameloop(space_objects, keys, screen, font)
-
+            stage = planet1_gameloop.gameloop(keys, stage)
 
     pygame.display.flip()
     clock.tick(60)

@@ -18,38 +18,39 @@ class Ship:
         self.mass = 1000  # in kg
         self.max_atmospheric_velocity = 100  # in units per frame
         self.graphics_spaceship_original = pygame.image.load("assets/spaceship.png").convert_alpha()  # mit Alpha (Transparenz)
-        self.graphics_spaceship = pygame.transform.scale(self.graphics_spaceship_original, (200, 200))
+        self.graphics_spaceship = pygame.transform.scale(self.graphics_spaceship_original, (50, 50))
         self.graphics_thrust_1_original = pygame.image.load("assets/thrust_1.png").convert_alpha()  # mit Alpha (Transparenz)
-        self.graphics_thrust_1 = pygame.transform.scale(self.graphics_thrust_1_original, (200, 200))
+        self.graphics_thrust_1 = pygame.transform.scale(self.graphics_thrust_1_original, (30, 30))
         self.graphics_thrust_2_original = pygame.image.load("assets/thrust_2.png").convert_alpha()  # mit Alpha (Transparenz)
-        self.graphics_thrust_2 = pygame.transform.scale(self.graphics_thrust_2_original, (200, 200))
+        self.graphics_thrust_2 = pygame.transform.scale(self.graphics_thrust_2_original, (30, 30))
         self.graphics_flame_1_original = pygame.image.load("assets/flame_1.png").convert_alpha()  # mit Alpha (Transparenz)
-        self.graphics_flame_1 = pygame.transform.scale(self.graphics_flame_1_original, (200, 200))
+        self.graphics_flame_1 = pygame.transform.scale(self.graphics_flame_1_original, (15, 15))
         self.graphics_flame_2_original = pygame.image.load("assets/flame_2.png").convert_alpha()  # mit Alpha (Transparenz)
-        self.graphics_flame_2 = pygame.transform.scale(self.graphics_flame_2_original, (200, 200))
+        self.graphics_flame_2 = pygame.transform.scale(self.graphics_flame_2_original, (15, 15))
 
     def draw(self, surface):
-        base_graphics = self.graphics_spaceship.copy()
+
+        base_graphics = pygame.Surface((100, 100), pygame.SRCALPHA)
 
         if self.thrust:
             
             if pygame.time.get_ticks() % 400 < 200:
-                base_graphics.blit(self.graphics_thrust_1, (0, 0))
+                base_graphics.blit(self.graphics_thrust_1, (35, 50))
             else:
-                base_graphics.blit(self.graphics_thrust_2, (0, 0))
+                base_graphics.blit(self.graphics_thrust_2, (35, 50))
 
         if pygame.time.get_ticks() % 600 < 300:
             flame = self.graphics_flame_1
         else:
             flame = self.graphics_flame_2
         if self.right:
-            rotated_flame = pygame.transform.rotate(flame, 20)
-            base_graphics.blit(rotated_flame, (-30, 0))
+            rotated_flame = pygame.transform.rotate(flame, 45)
+            base_graphics.blit(rotated_flame, (50, 50))
         if self.left:
-            rotated_flame = pygame.transform.rotate(flame, -20)
-            base_graphics.blit(rotated_flame, (-35, 0))
+            rotated_flame = pygame.transform.rotate(flame, -45)
+            base_graphics.blit(rotated_flame, (30, 50))
 
-        base_graphics.blit(self.graphics_spaceship, (0, 0))
+        base_graphics.blit(self.graphics_spaceship, (25, 0))
 
         width, height = surface.get_size()
         rotated_graphics = pygame.transform.rotate(base_graphics, self.angle-90)
@@ -61,19 +62,19 @@ class Ship:
         self.thrust = False
         self.right = False
         self.left = False
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_w]:
             if self.fuel > 0:
                 self.x_velocity = self.x_velocity + math.cos(math.radians(self.angle)) * 0.03
                 self.y_velocity = self.y_velocity - math.sin(math.radians(self.angle)) * 0.03
                 self.thrust = True
                 self.fuel = max(0, self.fuel - 0.1)
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_a]:
             self.angular_velocity += 0.03
             self.left = True
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_d]:
             self.angular_velocity -= 0.03
             self.right = True
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_s]:
             if abs(self.angular_velocity) < 0.1:
                 self.angular_velocity = 0
             elif self.angular_velocity > 0:

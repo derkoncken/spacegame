@@ -1,6 +1,8 @@
 from entities.ship import Ship
 from entities.planet import Planet
 from entities.space_specific.star import Star
+from entities.character import Character
+from entities.ship_ground import ShipGround
 import random
 
 def create_objects(screen):
@@ -25,6 +27,11 @@ def create_objects(screen):
         else:
             stars.append(star)
 
+    # Character
+    character = Character()
 
-    spaceobjects = [ship, planets, stars]
-    return spaceobjects
+    ship_ground = ShipGround(x=200, y=200)
+    planet_1_objects = [ship_ground]
+
+    objects = [ship, planets, stars, character, planet_1_objects]
+    return objects
